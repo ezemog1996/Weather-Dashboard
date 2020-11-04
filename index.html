@@ -16,7 +16,7 @@
     <div id="container-left" class="float-left bg-light">
         <div class="mx-2">
             <h4>Search for a City:</h4>
-            <input type="text" class="form-control float-left" id="search" aria-describedby="search-bar">
+            <input type="text" class="form-control float-left" id="search" aria-describedby="search-bar" autocomplete="off">
             <button id="search-btn" type="button" class="btn btn-primary"><i class="fas fa-search"></i></button>
             <div id="cities" class="bg-white mt-3 border rounded"></div>
         </div>  
@@ -24,7 +24,7 @@
     <div id="container-right" class="float-right hide">
         <div id="today-container" class="my-3 ml-3 border rounded">
             <div id="today" class="mt-4 ml-4">
-                <h2><span id="current-city">City</span> <span class="date">(date)</span></h2>
+                <h2><span id="current-city">City</span> <span class="date">(date)</span><img class="icon"/></h2>
                 <h5 class="mt-4 mb-4">Temperature: <span class="temp"></span></h5>
                 <h5 class="mb-4">Humidity: <span class="humidity"></span></h5>
                 <h5 class="mb-4">Wind Speed: <span id="wind-speed"></span></h5>
@@ -33,34 +33,34 @@
         </div>
         <div id="forecast-container" class="ml-3">
             <h3>5-Day Forecast:</h3>
-            <div class="bg-primary float-left rounded mr-4 text-white py-2 pl-2 pr-4">
-                <h4 class="mb-4 date">Date</h4>
-                </img class="mb-4" id="icon">
-                <h6 class="mb-4">Temp: <span class="temp"></span></h6>
+            <div class="bg-primary float-left rounded mr-4 text-white pt-2 pl-2 pr-4">
+                <h5 class="mb-2 date">Date</h5>
+                <img class="icon mb-2"/>
+                <h6 class="mb-3">Temp: <span class="temp"></span></h6>
                 <h6>Humidity: <span class="humidity"></span></h6>
             </div>
-            <div class="bg-primary float-left rounded mr-4 text-white py-2 pl-2 pr-4">
-                <h4 class="mb-4 date">Date</h4>
-                </img class="mb-4" id="icon">
-                <h6 class="mb-4">Temp: <span class="temp"></span></h6>
+            <div class="bg-primary float-left rounded mr-4 text-white pt-2 pl-2 pr-4">
+                <h5 class="mb-2 date">Date</h5>
+                <img class="icon mb-2"/>
+                <h6 class="mb-3">Temp: <span class="temp"></span></h6>
                 <h6>Humidity: <span class="humidity"></span></h6>
             </div>
-            <div class="bg-primary float-left rounded mr-4 text-white py-2 pl-2 pr-4">
-                <h4 class="mb-4 date">Date</h4>
-                </img class="mb-4" id="icon">
-                <h6 class="mb-4">Temp: <span class="temp"></span></h6>
+            <div class="bg-primary float-left rounded mr-4 text-white pt-2 pl-2 pr-4">
+                <h5 class="mb-2 date">Date</h5>
+                <img class="icon mb-2"/>
+                <h6 class="mb-3">Temp: <span class="temp"></span></h6>
                 <h6>Humidity: <span class="humidity"></span></h6>
             </div>
-            <div class="bg-primary float-left rounded mr-4 text-white py-2 pl-2 pr-4">
-                <h4 class="mb-4 date">Date</h4>
-                </img class="mb-4" id="icon">
-                <h6 class="mb-4">Temp: <span class="temp"></span></h6>
+            <div class="bg-primary float-left rounded mr-4 text-white pt-2 pl-2 pr-4">
+                <h5 class="mb-2 date">Date</h5>
+                <img class="icon mb-2"/>
+                <h6 class="mb-3">Temp: <span class="temp"></span></h6>
                 <h6>Humidity: <span class="humidity"></span></h6>
             </div>
-            <div class="bg-primary float-left rounded mr-4 text-white py-2 pl-2 pr-4">
-                <h4 class="mb-4 date">Date</h4>
-                </img class="mb-4" id="icon">
-                <h6 class="mb-4">Temp: <span class="temp"></span></h6>
+            <div class="bg-primary float-left rounded mr-4 text-white pt-2 pl-2 pr-4">
+                <h5 class="mb-2 date">Date</h5>
+                <img class="icon mb-2"/>
+                <h6 class="mb-3">Temp: <span class="temp"></span></h6>
                 <h6>Humidity: <span class="humidity"></span></h6>
             </div>
         </div>
