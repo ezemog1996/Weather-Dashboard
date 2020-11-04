@@ -39,12 +39,21 @@ $("#search-btn").on("click", function(e) {
         var humidityArray = $(".humidity");
         $("#wind-speed").text(Math.round((parseInt(response.list[0].wind.speed) * 2.2369) * 10) / 10 + " MPH");
 
-        for (var i = 0; i < 6; i++) {
+        for (i = 0, j = 0; i < 6, j < 40; i++, j+=8) {
+            
             dateArray[i].textContent = moment().add(i, 'day').format("l");
-            var iconURL = "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + ".png";
+            var iconURL = "http://openweathermap.org/img/wn/" + response.list[j].weather[0].icon + ".png";
             iconArray[i].setAttribute("src", iconURL);
-            tempArray[i].textContent = (Math.round(((parseInt(response.list[i].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-            humidityArray[i].textContent = response.list[i].main.humidity + "%";
+            tempArray[i].textContent = (Math.round(((parseInt(response.list[j].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+            humidityArray[i].textContent = response.list[j].main.humidity + "%";
+
+            if (j === 32) {
+                dateArray[5].textContent = moment().add(i, 'day').format("l");
+                var iconURL = "http://openweathermap.org/img/wn/" + response.list[39].weather[0].icon + ".png";
+                iconArray[5].setAttribute("src", iconURL);
+                tempArray[5].textContent = (Math.round(((parseInt(response.list[39].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                humidityArray[5].textContent = response.list[39].main.humidity + "%";
+            }
         }
 
         
@@ -59,7 +68,7 @@ $("#search-btn").on("click", function(e) {
 
         $("#container-right").removeClass("hide");
         
-         makeClickable()
+        makeClickable()
     });
 });
 
@@ -88,12 +97,21 @@ function makeClickable() {
                 var humidityArray = $(".humidity");
                 $("#wind-speed").text(Math.round((parseInt(response.list[0].wind.speed) * 2.2369) * 10) / 10 + " MPH");
     
-                for (var i = 0; i < 6; i++) {
+                for (i = 0, j = 0; i < 6, j < 40; i++, j+=8) {
+            
                     dateArray[i].textContent = moment().add(i, 'day').format("l");
-                    var iconURL = "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + ".png";
+                    var iconURL = "http://openweathermap.org/img/wn/" + response.list[j].weather[0].icon + ".png";
                     iconArray[i].setAttribute("src", iconURL);
-                    tempArray[i].textContent = (Math.round(((parseInt(response.list[i].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-                    humidityArray[i].textContent = response.list[i].main.humidity + "%";
+                    tempArray[i].textContent = (Math.round(((parseInt(response.list[j].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                    humidityArray[i].textContent = response.list[j].main.humidity + "%";
+        
+                    if (j === 32) {
+                        dateArray[5].textContent = moment().add(i, 'day').format("l");
+                        var iconURL = "http://openweathermap.org/img/wn/" + response.list[39].weather[0].icon + ".png";
+                        iconArray[5].setAttribute("src", iconURL);
+                        tempArray[5].textContent = (Math.round(((parseInt(response.list[39].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                        humidityArray[5].textContent = response.list[39].main.humidity + "%";
+                    }
                 }
 
                 $.ajax({
