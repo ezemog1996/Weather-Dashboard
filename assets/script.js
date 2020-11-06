@@ -5,26 +5,29 @@ $("#search-btn").on("click", function(e) {
     
     var APIKey = "ae2dcc589707f61a832c268641e09317";
     var city = $("#search").val();
+
+    // Save the name of the city
+    var array = [];
+    if (localStorage.getItem("cities")) {
+        JSON.parse(localStorage.getItem("cities")).map(item => array.push(item));
+        array.push(city);
+        localStorage.setItem("cities", JSON.stringify(array));
+    } else {
+        array.push(city);
+        console.log(array);
+        localStorage.setItem("cities", JSON.stringify(array));
+    }
+    console.log(localStorage.getItem("cities"));
     // Here we are building the URL we need to query the database
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+    var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
     
     // We then created an AJAX call
     $.ajax({
-        url: queryURL,
+        url: weatherURL,
         method: "GET"
     }).then(function(response) {
         console.log(response);
-        var array = [];
-        if (localStorage.getItem("cities")) {
-            JSON.parse(localStorage.getItem("cities")).map(item => array.push(item));
-            array.push(city);
-            localStorage.setItem("cities", JSON.stringify(array));
-        } else {
-            array.push(city);
-            console.log(array);
-            localStorage.setItem("cities", JSON.stringify(array));
-        }
-        console.log(localStorage.getItem("cities"));
+        
 
         var citiesDiv = $("#cities");
         var newCityDiv = $("<div>");
@@ -37,28 +40,17 @@ $("#search-btn").on("click", function(e) {
         var iconArray = document.querySelectorAll(".icon");
         var tempArray = $(".temp");
         var humidityArray = $(".humidity");
-        $("#wind-speed").text(Math.round((parseInt(response.list[0].wind.speed) * 2.2369) * 10) / 10 + " MPH");
+        $("#wind-speed").text(Math.round((parseInt(response.wind.speed) * 2.2369) * 10) / 10 + " MPH");
 
-        for (i = 0, j = 0; i < 6, j < 40; i++, j+=8) {
-            
-            dateArray[i].textContent = moment().add(i, 'day').format("l");
-            var iconURL = "http://openweathermap.org/img/wn/" + response.list[j].weather[0].icon + ".png";
-            iconArray[i].setAttribute("src", iconURL);
-            tempArray[i].textContent = (Math.round(((parseInt(response.list[j].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-            humidityArray[i].textContent = response.list[j].main.humidity + "%";
-
-            if (j === 32) {
-                dateArray[5].textContent = moment().add(i, 'day').format("l");
-                var iconURL = "http://openweathermap.org/img/wn/" + response.list[39].weather[0].icon + ".png";
-                iconArray[5].setAttribute("src", iconURL);
-                tempArray[5].textContent = (Math.round(((parseInt(response.list[39].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-                humidityArray[5].textContent = response.list[39].main.humidity + "%";
-            }
-        }
+        dateArray[0].textContent = moment().format("l");
+        var iconURL = "http://openweathermap.org/img/wn/" + response.weather[0].icon + ".png";
+        iconArray[0].setAttribute("src", iconURL);
+        tempArray[0].textContent = (Math.round(((parseInt(response.main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+        humidityArray[0].textContent = response.main.humidity + "%";
 
         
         $.ajax({
-            url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.city.coord.lat + "&lon=" + response.city.coord.lon + "&appid=" + APIKey,
+            url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
             method: "GET"
             }).then(function(response) {
                 console.log(response);
@@ -66,7 +58,32 @@ $("#search-btn").on("click", function(e) {
                 $("#uv-index").css("background-color", uvColors[Math.floor(response[0].value)]);
             })
 
-        $("#container-right").removeClass("hide");
+            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+            
+        $.ajax({
+            url: forecastURL,
+            method: "GET"
+            }).then(function(response) {
+                console.log(response);
+    
+                $("#wind-speed").text(Math.round((parseInt(response.list[0].wind.speed) * 2.2369) * 10) / 10 + " MPH");
+                
+                var k = 1;
+                var day = 1;
+                for (var i = 0; i < response.list.length; i++) {
+                    if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
+                        dateArray[k].textContent = moment().add(day, 'day').format("l");
+                        var iconURL = "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + ".png";
+                        iconArray[k].setAttribute("src", iconURL);
+                        tempArray[k].textContent = (Math.round(((parseInt(response.list[i].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                        humidityArray[k].textContent = response.list[i].main.humidity + "%";
+                        k+=1;
+                        day+=1;
+                    }
+                }
+
+                $("#container-right").removeClass("hide");
+            })
         
         makeClickable()
     });
@@ -81,48 +98,65 @@ function makeClickable() {
             var city = event.target.textContent;
             console.log(city);
             // Here we are building the URL we need to query the database
-            var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+            var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIKey;
             
             // We then created an AJAX call
+            $("#current-city").text(city);
+            var dateArray = $(".date");
+            var iconArray = document.querySelectorAll(".icon");
+            var tempArray = $(".temp");
+            var humidityArray = $(".humidity");
+
             $.ajax({
-            url: queryURL,
+                url: weatherURL,
+                method: "GET"
+                }).then(function(response) {
+                    console.log(response);
+        
+                    $("#wind-speed").text(Math.round((parseInt(response.wind.speed) * 2.2369) * 10) / 10 + " MPH");            
+                    
+                    dateArray[0].textContent = moment().format("l");
+                    var iconURL = "http://openweathermap.org/img/wn/" + response.weather[0].icon + ".png";
+                    iconArray[0].setAttribute("src", iconURL);
+                    tempArray[0].textContent = (Math.round(((parseInt(response.main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                    humidityArray[0].textContent = response.main.humidity + "%";
+
+                    $.ajax({
+                        url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
+                        method: "GET"
+                        }).then(function(response) {
+                            console.log(response);
+                            $("#uv-index").text(response[0].value);
+                            $("#uv-index").css("background-color", uvColors[Math.floor(response[0].value)]);
+                        })
+                })
+
+            
+
+            var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
+
+            $.ajax({
+            url: forecastURL,
             method: "GET"
             }).then(function(response) {
                 console.log(response);
     
-                $("#current-city").text(city)
-                var dateArray = $(".date");
-                var iconArray = document.querySelectorAll(".icon");
-                var tempArray = $(".temp");
-                var humidityArray = $(".humidity");
                 $("#wind-speed").text(Math.round((parseInt(response.list[0].wind.speed) * 2.2369) * 10) / 10 + " MPH");
-    
-                for (i = 0, j = 0; i < 6, j < 40; i++, j+=8) {
-            
-                    dateArray[i].textContent = moment().add(i, 'day').format("l");
-                    var iconURL = "http://openweathermap.org/img/wn/" + response.list[j].weather[0].icon + ".png";
-                    iconArray[i].setAttribute("src", iconURL);
-                    tempArray[i].textContent = (Math.round(((parseInt(response.list[j].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-                    humidityArray[i].textContent = response.list[j].main.humidity + "%";
-        
-                    if (j === 32) {
-                        dateArray[5].textContent = moment().add(i, 'day').format("l");
-                        var iconURL = "http://openweathermap.org/img/wn/" + response.list[39].weather[0].icon + ".png";
-                        iconArray[5].setAttribute("src", iconURL);
-                        tempArray[5].textContent = (Math.round(((parseInt(response.list[39].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
-                        humidityArray[5].textContent = response.list[39].main.humidity + "%";
+                
+                var k = 1;
+                var day = 1;
+                for (var i = 0; i < response.list.length; i++) {
+                    if (response.list[i].dt_txt.indexOf("15:00:00") !== -1) {
+                        dateArray[k].textContent = moment().add(day, 'day').format("l");
+                        var iconURL = "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + ".png";
+                        iconArray[k].setAttribute("src", iconURL);
+                        tempArray[k].textContent = (Math.round(((parseInt(response.list[i].main.temp) - 273.15) * (9/5) + 32) * 10) / 10 + " \u00B0F");
+                        humidityArray[k].textContent = response.list[i].main.humidity + "%";
+                        k+=1;
+                        day+=1;
                     }
                 }
 
-                $.ajax({
-                    url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.city.coord.lat + "&lon=" + response.city.coord.lon + "&appid=" + APIKey,
-                    method: "GET"
-                    }).then(function(response) {
-                        console.log(response);
-                        $("#uv-index").text(response[0].value);
-                        $("#uv-index").css("background-color", uvColors[Math.floor(response[0].value)]);
-                    })
-    
                 $("#container-right").removeClass("hide");
             })
         })
