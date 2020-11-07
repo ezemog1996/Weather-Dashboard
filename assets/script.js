@@ -50,12 +50,12 @@ $("#search-btn").on("click", function(e) {
 
         
         $.ajax({
-            url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
+            url: "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
             method: "GET"
             }).then(function(response) {
                 console.log(response);
-                $("#uv-index").text(response[0].value);
-                $("#uv-index").css("background-color", uvColors[Math.floor(response[0].value)]);
+                $("#uv-index").text(response.value);
+                $("#uv-index").css("background-color", uvColors[Math.floor(response.value)]);
             })
 
             var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + APIKey;
@@ -122,12 +122,12 @@ function makeClickable() {
                     humidityArray[0].textContent = response.main.humidity + "%";
 
                     $.ajax({
-                        url: "http://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
+                        url: "http://api.openweathermap.org/data/2.5/uvi?lat=" + response.coord.lat + "&lon=" + response.coord.lon + "&appid=" + APIKey,
                         method: "GET"
                         }).then(function(response) {
                             console.log(response);
-                            $("#uv-index").text(response[0].value);
-                            $("#uv-index").css("background-color", uvColors[Math.floor(response[0].value)]);
+                            $("#uv-index").text(response.value);
+                            $("#uv-index").css("background-color", uvColors[Math.floor(response.value)]);
                         })
                 })
 
